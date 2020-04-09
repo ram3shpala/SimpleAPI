@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration status="trace" verbose="true">
+
+	<Properties>
+		<Property name="appname">$${jndi:java:app/AppName:-demobatch}</Property>
+		<Property name="jsonfilename">${appname}/json_${appname}.log</Property>
+		<Property name="textfilename">${appname}/text_${appname}.log</Property>
+		<Property name="jsonarchivefilename">${appname}/json_${appname}_%d{yyyyMMdd}_%i.log.gz
+		</Property>
+		<Property name="textarchivefilename">${appname}/text_${appname}_%d{yyyyMMdd}_%i.log.gz
+		</Property>
+		<Property name="maxfiles">${sys:colruyt.MaxLogFilesPerApp:-7}</Property>
+	</Properties>
+
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="%d{yyyy-MMM-dd HH:mm:ss a} [%t]
+				%-5level %logger{36} - %msg%n" />
+		</Console>
+
+		<RollingFile name="roll-by-time-json" fileName="${jsonfilename}"
+			filePattern="${jsonarchivefilename}">
+
+			<JsonLayout compact="true" stacktraceAsString="true"
+				eventEol="true" properties="true">
+				<KeyValuePair key="logtime" value="$${date:yyyy-MM-dd'T'HH:mm:ss.SSSZ}" />
+				<KeyValuePair key="application" value="${appname}" />
+				<KeyValuePair key="applicationServer"
+							  value="$${env:APPL_SERVER_NAME:-NOT_CONFIGURED}" />
+			</JsonLayout>
+
+			<Policies>
+				<OnStartupTriggeringPolicy />
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="100 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="1" />
+		</RollingFile>
+
+		<RollingFile name="roll-by-time-text" fileName="${textfilename}"
+			filePattern="${textarchivefilename}">
+
+			<PatternLayout>
+				<pattern>
+					Timestamp:%d{dd MMM yyyy HH:mm:ss,SSS}%nApplication:${appname}%nMDC:%mdc%nThread:%t%nLogger:%c%nMethod:%M%nLogLevel:%p%nLogMessage:%msg%nStacktrace:%throwable%n%n
+				</pattern>
+			</PatternLayout>
+
+			<Policies>
+				<OnStartupTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="100 MB" />
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+
+			<DefaultRolloverStrategy max="${maxfiles}" />
+		</RollingFile>
+
+	</Appenders>
+
+	<Loggers>
+		<Logger name="com.colruytgroup" level="debug" additivity="false">
+			<AppenderRef ref="roll-by-time-json" />
+			<AppenderRef ref="roll-by-time-text" />
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Root level="debug">
+			<AppenderRef ref="Console" />
+		</Root>
+	</Loggers>
+</Configuration>
+
+
+
