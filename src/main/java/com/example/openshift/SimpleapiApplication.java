@@ -1,13 +1,13 @@
-package com.demo.openshift.SimpleAPI;
+package com.example.openshift;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SimpleApiApplication {
+public class SimpleapiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SimpleApiApplication.class, args);
+		SpringApplication.run(SimpleapiApplication.class, args);
 	}
 
 }

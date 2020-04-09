@@ -1,10 +1,10 @@
-package com.demo.openshift.SimpleAPI;
+package com.example.openshift;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SimpleApiApplicationTests {
+class SimpleapiApplicationTests {
 
 	@Test
 	void contextLoads() {
